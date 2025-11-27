@@ -1,0 +1,126 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "FesFolio Event Schema",
+    "description": "フェス・ライブイベントデータのスキーマ定義",
+    "type": "object",
+    "required": [
+        "event_id",
+        "event_name",
+        "date",
+        "venue",
+        "stages",
+        "timetable"
+    ],
+    "properties": {
+        "event_id": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}_[a-z]_[a-z0-9-]+$",
+            "description": "イベントID (形式: YYYY-MM-DD_カテゴリ_スラッグ)"
+        },
+        "event_name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "イベント名"
+        },
+        "date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "description": "開催日 (形式: YYYY-MM-DD)"
+        },
+        "venue": {
+            "type": "string",
+            "minLength": 1,
+            "description": "会場名"
+        },
+        "open_time": {
+            "type": "string",
+            "pattern": "^[0-9]{2}:[0-9]{2}$",
+            "description": "開場時刻 (形式: HH:MM)"
+        },
+        "start_time": {
+            "type": "string",
+            "pattern": "^[0-9]{2}:[0-9]{2}$",
+            "description": "開演時刻 (形式: HH:MM)"
+        },
+        "stages": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "stage_id",
+                    "stage_name"
+                ],
+                "properties": {
+                    "stage_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "ステージID"
+                    },
+                    "stage_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "ステージ名"
+                    },
+                    "stage_description": {
+                        "type": "string",
+                        "description": "ステージの説明（任意）"
+                    }
+                }
+            }
+        },
+        "timetable": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": [
+                    "stage_id",
+                    "start",
+                    "end",
+                    "act",
+                    "type"
+                ],
+                "properties": {
+                    "stage_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "ステージID（stagesで定義したものと一致）"
+                    },
+                    "start": {
+                        "type": "string",
+                        "pattern": "^[0-9]{2}:[0-9]{2}$",
+                        "description": "開始時刻 (形式: HH:MM)"
+                    },
+                    "end": {
+                        "type": "string",
+                        "pattern": "^[0-9]{2}:[0-9]{2}$",
+                        "description": "終了時刻 (形式: HH:MM)"
+                    },
+                    "act": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "出演者・アクト名"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "artist",
+                            "mc",
+                            "other"
+                        ],
+                        "description": "タイプ (artist: アーティスト, mc: MC, other: その他)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "詳細説明（任意）"
+                    },
+                    "emoji": {
+                        "type": "string",
+                        "description": "絵文字（任意）"
+                    }
+                }
+            }
+        }
+    }
+}
