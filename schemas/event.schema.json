@@ -107,9 +107,10 @@
                         "enum": [
                             "live",
                             "tokuten",
+                            "goods",
                             "other"
                         ],
-                        "description": "タイプ (live: ライブ, tokuten: 特典会, other: その他)"
+                        "description": "タイプ (live: ライブ, tokuten: 特典会, goods: 物販, other: その他)"
                     },
                     "description": {
                         "type": "string",
