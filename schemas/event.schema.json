@@ -105,11 +105,11 @@
                     "type": {
                         "type": "string",
                         "enum": [
-                            "artist",
-                            "mc",
+                            "live",
+                            "tokuten",
                             "other"
                         ],
-                        "description": "タイプ (artist: アーティスト, mc: MC, other: その他)"
+                        "description": "タイプ (live: ライブ, tokuten: 特典会, other: その他)"
                     },
                     "description": {
                         "type": "string",
