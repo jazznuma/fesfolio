@@ -43,25 +43,47 @@ fesfolio-data/
 
 [sample/sample-event.json](sample/sample-event.json) を参考に、以下の必須フィールドを含めてください。
 
-#### 必須フィールド
+#### イベント情報(必須)
 
 | フィールド | 型 | 説明 |
 |----------|-----|------|
-| `event_id` | string | ファイル名（拡張子なし）と同じ |
+| `event_id` | string | ファイル名（拡張子なし）と同じ (YYYY-MM-DD_カテゴリ_スラッグ) |
 | `event_name` | string | イベント名 |
 | `date` | string | 開催日（YYYY-MM-DD） |
 | `venue` | string | 会場名 |
 | `stages` | array | ステージ情報の配列 |
 | `timetable` | array | タイムテーブルの配列 |
 
-#### 任意フィールド
+#### イベント情報(任意)
 
 | フィールド | 型 | 説明 |
 |----------|-----|------|
 | `open_time` | string | 開場時刻（HH:MM） |
 | `start_time` | string | 開演時刻（HH:MM） |
+| `ticket_url` | string | チケットサイトURL |
 | `description` | string | イベントの詳細説明 |
-| `emoji` | string | タイムテーブル項目の絵文字 |
+| `official_url` | string | 公式サイトURL |
+
+#### ステージ情報
+
+| フィールド | 型 | 説明 |
+|----------|-----|------|
+| `stage_id` | string | ステージID |
+| `stage_name` | string | ステージ名 |
+| `description` | string | ステージの説明（任意） |
+
+#### タイムテーブル情報
+
+| フィールド | 型 | 説明 |
+|----------|-----|------|
+| `stage_id` | string | ステージID（stagesで定義したものと一致） |
+| `start` | string | 開始時刻 (形式: HH:MM) |
+| `end` | string | 終了時刻 (形式: HH:MM) |
+| `act` | string | 出演者・アクト名 |
+| `type` | string | タイプ (live: ライブ, tokuten: 特典会, goods: 物販, other: その他)から選択 |
+| `description` | string | 詳細説明（任意） |
+| `emoji` | string | 絵文字（任意） |
+
 
 ### 3. プルリクエスト作成
 
