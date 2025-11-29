@@ -231,7 +231,7 @@
         },
         {
             "type": "live",
-            "act": "がすみ草とステラ",
+            "act": "かすみ草とステラ",
             "stage_id": "main",
             "start": "19:00",
             "end": "19:25"
@@ -254,7 +254,7 @@
         },
         {
             "type": "live",
-            "act": "#ハバハバハンビ",
+            "act": "#ババババンビ",
             "stage_id": "main",
             "start": "20:20",
             "end": "20:45",
@@ -275,7 +275,7 @@
             "stage_id": "main",
             "start": "21:10",
             "end": "22:30",
-            "description": ""
+            "description": "衛星とカラテア/ドラマチックレコード/#ババババンビ/Merry BAD TUNE."
         },
         {
             "type": "tokuten",
@@ -374,14 +374,6 @@
             "stage_id": "goods_b",
             "start": "18:05",
             "end": "19:25"
-        },
-        {
-            "type": "tokuten",
-            "act": "PRSMIN",
-            "stage_id": "goods_b",
-            "start": "18:30",
-            "end": "19:50",
-            "description": ""
         },
         {
             "type": "tokuten",
