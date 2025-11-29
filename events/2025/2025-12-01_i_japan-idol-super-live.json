@@ -33,6 +33,11 @@
             "description": "物販場所D"
         },
         {
+            "stage_id": "goods_e",
+            "stage_name": "物販E",
+            "description": "物販場所E"
+        },
+        {
             "stage_id": "goods_f",
             "stage_name": "物販F",
             "description": "物販場所F"
@@ -57,7 +62,7 @@
         },
         {
             "type": "live",
-            "act": "しきあ",
+            "act": "しろもん",
             "stage_id": "main",
             "start": "10:20",
             "end": "10:40",
@@ -119,7 +124,7 @@
         },
         {
             "type": "live",
-            "act": "7曜日のアイドル",
+            "act": "7限目のフルール",
             "stage_id": "main",
             "start": "13:05",
             "end": "13:25",
@@ -127,7 +132,7 @@
         },
         {
             "type": "live",
-            "act": "限りなくぼく",
+            "act": "限りなく白く",
             "stage_id": "main",
             "start": "13:25",
             "end": "13:45",
@@ -174,7 +179,7 @@
         },
         {
             "type": "live",
-            "act": "W.ダブルウィー",
+            "act": "W.ダブルヴィー",
             "stage_id": "main",
             "start": "15:30",
             "end": "15:50"
@@ -197,7 +202,7 @@
         },
         {
             "type": "live",
-            "act": "パティーク",
+            "act": "パラディーク",
             "stage_id": "main",
             "start": "16:35",
             "end": "16:55",
@@ -268,7 +273,7 @@
         },
         {
             "type": "live",
-            "act": "AsIs",
+            "act": "Asls",
             "stage_id": "main",
             "start": "19:45",
             "end": "20:05",
@@ -299,7 +304,7 @@
         },
         {
             "type": "live",
-            "act": "シェレンガガールの犬",
+            "act": "ジェメイ",
             "stage_id": "main",
             "start": "21:20",
             "end": "21:40",
@@ -308,7 +313,7 @@
         },
         {
             "type": "live",
-            "act": "点楽テンセイ少女。",
+            "act": "点染テンセイ少女。",
             "stage_id": "main",
             "start": "21:40",
             "end": "22:00",
@@ -348,13 +353,13 @@
             "type": "goods",
             "act": "CAL&RES",
             "stage_id": "goods_a",
-            "start": "15:55",
-            "end": "17:15",
+            "start": "15:30",
+            "end": "16:30",
             "emoji": ""
         },
         {
             "type": "goods",
-            "act": "パティーク",
+            "act": "パラディーク",
             "stage_id": "goods_a",
             "start": "17:05",
             "end": "18:05"
@@ -415,7 +420,7 @@
         },
         {
             "type": "goods",
-            "act": "W.ダブルウィー",
+            "act": "W.ダブルヴィー",
             "stage_id": "goods_b",
             "start": "16:00",
             "end": "17:00",
@@ -439,7 +444,7 @@
         },
         {
             "type": "goods",
-            "act": "AsIs",
+            "act": "Asls",
             "stage_id": "goods_b",
             "start": "20:15",
             "end": "21:15",
@@ -447,7 +452,7 @@
         },
         {
             "type": "goods",
-            "act": "しきあ",
+            "act": "しろもん",
             "stage_id": "goods_c",
             "start": "10:50",
             "end": "11:50"
@@ -462,7 +467,7 @@
         },
         {
             "type": "goods",
-            "act": "7曜日のアイドル",
+            "act": "7限目のフルール",
             "stage_id": "goods_c",
             "start": "13:35",
             "end": "14:35",
@@ -507,17 +512,10 @@
             "end": "12:10",
             "description": ""
         },
+        
         {
             "type": "goods",
-            "act": "ideal peco",
-            "stage_id": "goods_d",
-            "start": "11:30",
-            "end": "12:30",
-            "description": ""
-        },
-        {
-            "type": "goods",
-            "act": "限りなくぼく",
+            "act": "限りなく白く",
             "stage_id": "goods_d",
             "start": "13:55",
             "end": "14:55",
@@ -530,15 +528,7 @@
             "start": "15:20",
             "end": "16:20"
         },
-        {
-            "type": "goods",
-            "act": "RiNCENT#",
-            "stage_id": "goods_d",
-            "start": "16:20",
-            "end": "17:20",
-            "description": "",
-            "emoji": ""
-        },
+        
         {
             "type": "goods",
             "act": "AILOS",
@@ -556,10 +546,25 @@
         },
         {
             "type": "goods",
-            "act": "点楽テンセイ少女。",
+            "act": "点染テンセイ少女。",
             "stage_id": "goods_f",
             "start": "20:20",
             "end": "21:20",
+            "description": ""
+        },
+        {
+            "type": "goods",
+            "act": "ジェメイ",
+            "stage_id": "goods_e",
+            "start": "20:00",
+            "end": "21:00"
+        },
+        {
+            "type": "goods",
+            "act": "SUPER☆GiRLS",
+            "stage_id": "goods_c",
+            "start": "19:15",
+            "end": "20:15",
             "description": ""
         }
     ],
