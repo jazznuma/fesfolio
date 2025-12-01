@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イベントJSON作成ツール - FesFolio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>イベントJSON作成ツール</h1>
+      <p>オフラインで動作するイベントデータ作成ツール</p>
+    </header>
+
+    <div class="section">
+      <h2>基本情報</h2>
+      <div class="form-group">
+        <label for="eventName">イベント名 *</label>
+        <input type="text" id="eventName" placeholder="2025アイドル年末フェス in SAMPLE HALL" required>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label for="eventDate">開催日 *</label>
+          <input type="text" id="eventDate" placeholder="2025-12-01" required>
+        </div>
+        <div class="form-group">
+          <label for="openTime">開場 *</label>
+          <input type="text" id="openTime" placeholder="12:00" onchange="updateStartTimeFromOpen()" required>
+        </div>
+        <div class="form-group">
+          <label for="startTime">開演 *</label>
+          <input type="text" id="startTime" placeholder="12:30" onchange="validateStartTime(); updateFirstTimetableFromStart();" disabled required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="venue">会場名 *</label>
+        <input type="text" id="venue" placeholder="SAMPLE HALL" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="officialUrl">公式URL</label>
+          <input type="url" id="officialUrl" placeholder="" onchange="validateUrl(this)">
+        </div>
+        <div class="form-group">
+          <label for="ticketUrl">チケットURL</label>
+          <input type="url" id="ticketUrl" placeholder="" onchange="validateUrl(this)">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description">説明</label>
+        <textarea id="description" rows="2" placeholder=""></textarea>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>ステージ情報</h2>
+      <div id="stagesContainer"></div>
+      <button type="button" class="btn-secondary" onclick="addStage()">+ ステージ追加</button>
+    </div>
+
+    <div class="section">
+      <h2>タイムテーブル</h2>
+      <div class="tabs" role="tablist" aria-label="タイムテーブル入力方法">
+        <button class="tab-btn active" 
+                role="tab" 
+                aria-selected="true" 
+                aria-controls="manualTab" 
+                id="manualTabBtn"
+                tabindex="0"
+                onclick="switchTab('manual')">手動入力</button>
+        <button class="tab-btn" 
+                role="tab" 
+                aria-selected="false" 
+                aria-controls="bulkTab" 
+                id="bulkTabBtn"
+                tabindex="-1"
+                onclick="switchTab('bulk')">一括入力（OCR対応）</button>
+      </div>
+      
+      <div id="manualTab" class="tab-content active" role="tabpanel" aria-labelledby="manualTabBtn" aria-hidden="false">
+        <div class="section">
+          <div class="form-row-3">
+            <div class="form-group">
+              <label for="defaultStage">ステージ *</label>
+              <select id="defaultStage" onchange="updateDefaultValues()">
+                <option value="">-- 選択 --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="defaultType">タイプ *</label>
+              <select id="defaultType" onchange="updateDefaultValues()">
+                <option value="live">ライブ</option>
+                <option value="tokuten">特典会</option>
+                <option value="goods">物販</option>
+                <option value="other">その他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="defaultDuration">デフォルト時間間隔</label>
+              <select id="defaultDuration" onchange="updateDefaultValues()">
+                <option value="5">5分</option>
+                <option value="10">10分</option>
+                <option value="15">15分</option>
+                <option value="20" selected>20分</option>
+                <option value="25">25分</option>
+                <option value="30">30分</option>
+                <option value="40">40分</option>
+                <option value="45">45分</option>
+                <option value="60">60分</option>
+                <option value="90">90分</option>
+              </select>
+            </div>
+          </div>
+          <p class="hint">※ ステージとタイプを選択すると、以降のエントリーに自動適用されます</p>
+        </div>
+        <div class="timetable-header">
+          <span class="header-num">#</span>
+          <span class="header-time">開始</span>
+          <span class="header-separator">〜</span>
+          <span class="header-time">終了</span>
+          <span class="header-act">出演者</span>
+          <span class="header-desc">説明</span>
+          <span class="header-emoji">🎵</span>
+          <span class="header-btn"></span>
+          <span class="header-btn"></span>
+          <span class="header-badge">ステージ・タイプ</span>
+        </div>
+        <div id="timetableContainer"></div>
+        <button type="button" class="btn-secondary" onclick="addTimetableEntry()">+ エントリー追加</button>
+      </div>
+
+      <div id="bulkTab" class="tab-content" role="tabpanel" aria-labelledby="bulkTabBtn" aria-hidden="true">
+        <p class="hint">OCR結果をそのまま貼り付けてください。各行を自動解析します。</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bulkStageId">ステージ *</label>
+            <select id="bulkStageId">
+              <option value="">-- 選択 --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bulkType">タイプ *</label>
+            <select id="bulkType">
+              <option value="live">ライブ</option>
+              <option value="tokuten">特典会</option>
+              <option value="goods">物販</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="bulkInput">タイムテーブルテキスト</label>
+          <textarea id="bulkInput" rows="10" placeholder="例:&#10;10:10〜10:30　サンプルノート&#10;10:30〜10:50　名古屋レボリューション&#10;10:50〜11:10　サンプル Project"></textarea>
+        </div>
+        <button type="button" class="btn-primary" onclick="parseBulkInput()">一括追加</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>プレビュー</h2>
+      <pre id="jsonOutput"></pre>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-primary" onclick="generateJSON()">JSONを生成</button>
+      <button type="button" class="btn-primary" id="downloadBtn" style="display:none;" onclick="downloadJSON()">JSONをダウンロード</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
