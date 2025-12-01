@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Flatpickrで日付と時間をカスタマイズ
   initializeFlatpickr();
+  
+  // タブのキーボードナビゲーションを初期化
+  initTabKeyboardNavigation();
 });
 
 // Flatpickr初期化
@@ -40,7 +43,7 @@ function initializeFlatpickr() {
   });
   
   // 開場・開演時間ピッカー（5分刻み、マウスで選びやすく）
-  const openTimePicker = flatpickr('#openTime', {
+  flatpickr('#openTime', {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
@@ -60,7 +63,7 @@ function initializeFlatpickr() {
     }
   });
   
-  const startTimePicker = flatpickr('#startTime', {
+  flatpickr('#startTime', {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
@@ -361,22 +364,92 @@ function addTimetableEntry(data = {}) {
     }
   }
   
-  entryDiv.innerHTML = `
-    <input type="hidden" class="tt-stage" value="${stageId}">
-    <input type="hidden" class="tt-type" value="${type}">
-    <div class="entry-row">
-      <span class="entry-num">1</span>
-      <input type="time" class="tt-start" value="${startTime}" required>
-      <span class="time-separator">〜</span>
-      <input type="time" class="tt-end" value="${endTime}" required>
-      <input type="text" class="tt-act" value="${data.act || ''}" placeholder="サンプル Project" required>
-      <input type="text" class="tt-description" value="${data.description || ''}" placeholder="">
-      <input type="text" class="tt-emoji" value="${data.emoji || ''}" placeholder="" maxlength="2">
-      <button type="button" class="btn-insert-icon" onclick="insertTimetableAfter(${timetableCount})" title="この行の後に追加">+</button>
-      <button type="button" class="btn-remove-icon" onclick="removeTimetable(${timetableCount})" title="削除">×</button>
-      <span class="bdg bdg-combo" title="ステージ/タイプ"></span>
-    </div>
-  `;
+  // XSS脆弱性を防ぐため、DOM操作で要素を作成
+  const stageInput = document.createElement('input');
+  stageInput.type = 'hidden';
+  stageInput.className = 'tt-stage';
+  stageInput.value = stageId;
+  
+  const typeInput = document.createElement('input');
+  typeInput.type = 'hidden';
+  typeInput.className = 'tt-type';
+  typeInput.value = type;
+  
+  const entryRow = document.createElement('div');
+  entryRow.className = 'entry-row';
+  
+  const entryNum = document.createElement('span');
+  entryNum.className = 'entry-num';
+  entryNum.textContent = '1';
+  
+  const startTimeInput = document.createElement('input');
+  startTimeInput.type = 'time';
+  startTimeInput.className = 'tt-start';
+  startTimeInput.value = startTime;
+  startTimeInput.required = true;
+  
+  const separator = document.createElement('span');
+  separator.className = 'time-separator';
+  separator.textContent = '〜';
+  
+  const endTimeInput = document.createElement('input');
+  endTimeInput.type = 'time';
+  endTimeInput.className = 'tt-end';
+  endTimeInput.value = endTime;
+  endTimeInput.required = true;
+  
+  const actInput = document.createElement('input');
+  actInput.type = 'text';
+  actInput.className = 'tt-act';
+  actInput.value = data.act || '';
+  actInput.placeholder = 'サンプル Project';
+  actInput.required = true;
+  
+  const descInput = document.createElement('input');
+  descInput.type = 'text';
+  descInput.className = 'tt-description';
+  descInput.value = data.description || '';
+  descInput.placeholder = '';
+  
+  const emojiInput = document.createElement('input');
+  emojiInput.type = 'text';
+  emojiInput.className = 'tt-emoji';
+  emojiInput.value = data.emoji || '';
+  emojiInput.placeholder = '';
+  emojiInput.maxLength = 2;
+  
+  const insertBtn = document.createElement('button');
+  insertBtn.type = 'button';
+  insertBtn.className = 'btn-insert-icon';
+  insertBtn.onclick = () => insertTimetableAfter(timetableCount);
+  insertBtn.title = 'この行の後に追加';
+  insertBtn.textContent = '+';
+  
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'btn-remove-icon';
+  removeBtn.onclick = () => removeTimetable(timetableCount);
+  removeBtn.title = '削除';
+  removeBtn.textContent = '×';
+  
+  const badge = document.createElement('span');
+  badge.className = 'bdg bdg-combo';
+  badge.title = 'ステージ/タイプ';
+  
+  entryRow.appendChild(entryNum);
+  entryRow.appendChild(startTimeInput);
+  entryRow.appendChild(separator);
+  entryRow.appendChild(endTimeInput);
+  entryRow.appendChild(actInput);
+  entryRow.appendChild(descInput);
+  entryRow.appendChild(emojiInput);
+  entryRow.appendChild(insertBtn);
+  entryRow.appendChild(removeBtn);
+  entryRow.appendChild(badge);
+  
+  entryDiv.appendChild(stageInput);
+  entryDiv.appendChild(typeInput);
+  entryDiv.appendChild(entryRow);
   
   container.appendChild(entryDiv);
   
@@ -547,8 +620,21 @@ function addMinutes(timeString, minutes) {
   
   // HH:MM または HH:MM:SS 形式に対応
   const timeParts = timeString.split(':');
+  
+  // 形式の検証: 少なくとも2つの部分（時と分）が必要
+  if (timeParts.length < 2) {
+    console.error(`Invalid time format: ${timeString}`);
+    return '';
+  }
+  
   const hours = parseInt(timeParts[0], 10);
   const mins = parseInt(timeParts[1], 10);
+  
+  // NaNチェック
+  if (isNaN(hours) || isNaN(mins)) {
+    console.error(`Invalid time values: ${timeString}`);
+    return '';
+  }
   
   let totalMinutes = hours * 60 + mins + minutes;
   
@@ -563,17 +649,67 @@ function addMinutes(timeString, minutes) {
   return `${String(newHours).padStart(2, '0')}:${String(newMins).padStart(2, '0')}`;
 }
 
+// 時間文字列を分単位に変換する関数
+function timeToMinutes(timeString) {
+  if (!timeString) return 0;
+  
+  // HH:MM または HH:MM:SS 形式に対応
+  const timeParts = timeString.split(':');
+  
+  // 形式の検証: 少なくとも2つの部分（時と分）が必要
+  if (timeParts.length < 2) {
+    console.error(`Invalid time format: ${timeString}`);
+    return 0;
+  }
+  
+  const hours = parseInt(timeParts[0], 10);
+  const mins = parseInt(timeParts[1], 10);
+  
+  // NaNチェック
+  if (isNaN(hours) || isNaN(mins)) {
+    console.error(`Invalid time values: ${timeString}`);
+    return 0;
+  }
+  
+  return hours * 60 + mins;
+}
+
 // タブ切り替え
 function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+  
+  // すべてのタブボタンとコンテンツを非アクティブ化
+  tabButtons.forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+    btn.setAttribute('tabindex', '-1');
+  });
+  
+  tabContents.forEach(content => {
+    content.classList.remove('active');
+    content.setAttribute('aria-hidden', 'true');
+  });
+  
+  // 選択されたタブをアクティブ化
+  let activeButton, activeContent;
   
   if (tab === 'manual') {
-    document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-    document.getElementById('manualTab').classList.add('active');
+    activeButton = document.querySelector('.tab-btn:nth-child(1)');
+    activeContent = document.getElementById('manualTab');
   } else {
-    document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
-    document.getElementById('bulkTab').classList.add('active');
+    activeButton = document.querySelector('.tab-btn:nth-child(2)');
+    activeContent = document.getElementById('bulkTab');
+  }
+  
+  if (activeButton && activeContent) {
+    activeButton.classList.add('active');
+    activeButton.setAttribute('aria-selected', 'true');
+    activeButton.setAttribute('tabindex', '0');
+    activeButton.focus();
+    
+    activeContent.classList.add('active');
+    activeContent.setAttribute('aria-hidden', 'false');
   }
 }
 
@@ -678,6 +814,52 @@ function getTimetable() {
   return timetable;
 }
 
+// イベント名からスラッグを生成
+function generateSlug(eventName) {
+  // 基本的な簡易ローマ字変換マップ（よく使われる単語）
+  const japaneseToRomaji = {
+    'アイドル': 'idol',
+    'フェス': 'fes',
+    'ライブ': 'live',
+    'コンサート': 'concert',
+    '音楽': 'music',
+    'フェスティバル': 'festival',
+    'ステージ': 'stage',
+    'イベント': 'event',
+    'まつり': 'matsuri',
+    '祭': 'matsuri',
+    '学園祭': 'gakuensai',
+    '文化祭': 'bunkasai'
+  };
+  
+  let slug = eventName;
+  
+  // よく使われる日本語単語を英語に変換
+  for (const [jp, en] of Object.entries(japaneseToRomaji)) {
+    const regex = new RegExp(jp, 'g');
+    slug = slug.replace(regex, en);
+  }
+  
+  // 英数字、スペース、ハイフンのみを残す（日本語文字は削除）
+  slug = slug
+    .toLowerCase()
+    .replace(/[^\x00-\x7F\s-]/g, '') // 非ASCII文字を削除
+    .replace(/[^\w\s-]/g, '') // 英数字、スペース、ハイフン以外を削除
+    .trim()
+    .replace(/\s+/g, '-') // スペースをハイフンに
+    .replace(/-+/g, '-') // 連続するハイフンを1つに
+    .replace(/^-|-$/g, ''); // 先頭と末尾のハイフンを削除
+  
+  // スラッグが空または短すぎる場合はタイムスタンプベースにする
+  if (!slug || slug.length < 3) {
+    const now = new Date();
+    slug = `event-${now.getTime().toString().slice(-6)}`;
+  }
+  
+  // 最大50文字に制限
+  return slug.substring(0, 50).replace(/-$/, ''); // 末尾のハイフンを削除
+}
+
 // JSON生成
 function generateJSON() {
   const eventName = document.getElementById('eventName').value.trim();
@@ -719,11 +901,7 @@ function generateJSON() {
   }
   
   // event_id生成（カテゴリは"i"固定、スラッグは自動生成）
-  const slug = eventName
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .substring(0, 50);
+  const slug = generateSlug(eventName);
   const eventId = `${eventDate}_i_${slug}`;
   
   // JSONオブジェクト構築
@@ -773,4 +951,42 @@ function downloadJSON() {
   URL.revokeObjectURL(url);
   
   alert(`${filename} をダウンロードしました`);
+}
+
+// タブのキーボードナビゲーション
+function initTabKeyboardNavigation() {
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  
+  tabButtons.forEach((button, index) => {
+    button.addEventListener('keydown', (e) => {
+      let targetIndex = index;
+      
+      // 左矢印キーまたは上矢印キー
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        targetIndex = index > 0 ? index - 1 : tabButtons.length - 1;
+      }
+      // 右矢印キーまたは下矢印キー
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        targetIndex = index < tabButtons.length - 1 ? index + 1 : 0;
+      }
+      // Homeキー
+      else if (e.key === 'Home') {
+        e.preventDefault();
+        targetIndex = 0;
+      }
+      // Endキー
+      else if (e.key === 'End') {
+        e.preventDefault();
+        targetIndex = tabButtons.length - 1;
+      }
+      else {
+        return; // その他のキーは処理しない
+      }
+      
+      // ターゲットタブにフォーカスして選択
+      tabButtons[targetIndex].click();
+    });
+  });
 }
