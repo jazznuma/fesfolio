@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   background: white;
   border-radius: 12px;
@@ -40,15 +40,15 @@ header p {
 }
 
 .section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
   background: #f8f9fa;
   border-radius: 8px;
 }
 
 .section h2 {
   color: #333;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #667eea;
@@ -74,6 +74,87 @@ header p {
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 必須項目が未入力の場合 */
+.form-group input:required:invalid,
+.form-group select:required:invalid,
+.form-group textarea:required:invalid {
+  background-color: #fff5f5;
+  border-color: #ffc7c7;
+}
+
+/* 入力済みの必須項目 */
+.form-group input:required:valid,
+.form-group select:required:valid,
+.form-group textarea:required:valid {
+  background-color: white;
+}
+
+/* フォーカス時は通常の色に */
+.form-group input:required:focus,
+.form-group select:required:focus,
+.form-group textarea:required:focus {
+  background-color: white;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+}
+
+
+/* ステージ/タイプバッジ */
+.bdg {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  color: #2d3f5e;
+  background: #eef3ff;
+  border: 1px solid #d9e3ff;
+  white-space: nowrap;
+}
+.bdg-stage { justify-self: start; }
+.bdg-type { justify-self: start; }
+.bdg-combo { justify-self: end; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+.form-group {
+  margin-bottom: 0.8rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
   transition: border-color 0.3s;
 }
 
@@ -85,23 +166,42 @@ header p {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.stage-entry {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e0e0e0;
 }
 
-.form-row-3 {
+.stage-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-  gap: 0.8rem;
-  align-items: end;
+  grid-template-columns: 30px 2fr 2fr 40px;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-.form-row-full {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 0.8rem;
+.stage-row input {
+  padding: 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+/* ステージの必須項目が未入力の場合 */
+.stage-row input:required:invalid {
+  background-color: #fff5f5;
+  border-color: #ffc7c7;
+}
+
+.stage-row input:required:valid {
+  background-color: white;
+}
+
+.stage-row input:required:focus {
+  background-color: white;
+  border-color: #667eea;
 }
 
 .timetable-header {
@@ -119,15 +219,6 @@ header p {
   font-style: italic;
 }
 
-.stage-entry {
-  background: white;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  border: 1px solid #e0e0e0;
-  position: relative;
-}
-
 .timetable-entry {
   background: white;
   padding: 0.5rem;
@@ -138,7 +229,7 @@ header p {
 
 .entry-row {
   display: grid;
-  grid-template-columns: 30px 90px 20px 90px 2fr 2fr 60px 40px;
+  grid-template-columns: 36px 120px 24px 120px 1.2fr 1fr 60px 40px 40px 160px;
   gap: 0.5rem;
   align-items: center;
 }
@@ -161,6 +252,7 @@ header p {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
+  transition: all 0.3s;
 }
 
 .entry-row input[type="text"] {
@@ -168,6 +260,22 @@ header p {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+/* タイムテーブルの必須項目が未入力の場合 */
+.entry-row input:required:invalid {
+  background-color: #fff5f5;
+  border-color: #ffc7c7;
+}
+
+.entry-row input:required:valid {
+  background-color: white;
+}
+
+.entry-row input:required:focus {
+  background-color: white;
+  border-color: #667eea;
 }
 
 .tt-act {
@@ -177,6 +285,28 @@ header p {
 .tt-emoji {
   text-align: center;
   font-size: 1.2rem;
+}
+
+.btn-insert-icon {
+  background: #28a745;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.btn-insert-icon:hover {
+  background: #218838;
+  transform: scale(1.1);
 }
 
 .btn-remove-icon {
@@ -331,12 +461,18 @@ header p {
     padding: 1rem;
   }
   
-  .form-row {
+  .form-row,
+  .form-row-3 {
     grid-template-columns: 1fr;
   }
   
   header h1 {
     font-size: 1.5rem;
+  }
+  
+  .stage-row {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
   }
   
   .entry-row {
