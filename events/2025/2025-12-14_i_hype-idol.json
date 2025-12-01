@@ -1,10 +1,10 @@
 {
   "event_id": "2025-12-14_i_hype-idol",
-  "event_name": "喰らい × HYPE IDOL!",
+  "event_name": "喰らいマックス × HYPE IDOL！",
   "date": "2025-12-14",
   "venue": "代々木公園野外ステージ",
-  "open_time": "09:30",
-  "start_time": "10:00",
+  "open_time": "09:00",
+  "start_time": "09:30",
   "ticket_url": "https://ticketdive.com/event/climaxhype_1214",
   "stages": [
     { "stage_id": "main", "stage_name": "メインステージ", "stage_description": "野外ステージ" },
