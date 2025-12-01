@@ -80,6 +80,21 @@
   checkedGridSet.clear();
   ngSet.clear();
 
+    // Data size validation (DoS prevention)
+    const MAX_STAGES = 100;
+    const MAX_SLOTS = 5000;
+    const stages = (json.stages || []).length;
+    const slots = (json.timetable || []).length;
+    
+    if (stages > MAX_STAGES) {
+      showValidation(false, `ステージ数が多すぎます (${stages}/${MAX_STAGES})`);
+      return;
+    }
+    if (slots > MAX_SLOTS) {
+      showValidation(false, `枠数が多すぎます (${slots}/${MAX_SLOTS})`);
+      return;
+    }
+
     // Schema validation
     if (ajv) {
       try {
