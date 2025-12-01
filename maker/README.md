@@ -120,7 +120,7 @@ maker/
 ├── timetable_json_tool.html    # メインHTML（ツール本体）
 ├── app.js                       # ロジック（データ処理・JSON生成）
 ├── style.css                    # スタイルシート（デザイン）
-├── flatpickr.min.css           # Flatpickrライブラリ（CDN）
+├── flatpickr.min.css           # Flatpickrライブラリ（ローカル）
 ├── flatpickr-custom.css        # Flatpickrカスタムスタイル
 └── README.md                    # このファイル
 ```
